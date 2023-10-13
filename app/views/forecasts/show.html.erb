@@ -1,0 +1,13 @@
+<div class="container">
+  <h1>Weather Forecast</h1>
+
+  <%= form_with(url: forecast_path, method: "get", local: true, data: { turbo_frame: "weather_results" }) do %>
+    <%= label_tag :address, "Enter Address or ZIP code:" %>
+    <%= text_field_tag :address, params[:address] %>
+    <%= submit_tag "Get Forecast" %>
+  <% end %>
+
+  <%= turbo_frame_tag "weather_results" do %>
+    <%= render partial: "weather_results", locals: { forecast: @forecast, address: @address, from_cache: @from_cache } %>
+  <% end %>
+</div>

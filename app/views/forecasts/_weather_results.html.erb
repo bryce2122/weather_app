@@ -1,0 +1,19 @@
+<% if forecast.present? %>
+  <h2>Weather Forecast for <%= address %></h2>
+
+  <p><strong>Current Temperature:</strong> <%= forecast[:current_temperature] %>°F</p>
+
+  <% if forecast[:high_temperature] && forecast[:low_temperature] %>
+    <p><strong>High:</strong> <%= forecast[:high_temperature] %>°F</p>
+    <p><strong>Low:</strong> <%= forecast[:low_temperature] %>°F</p>
+  <% end %>
+
+  <% if from_cache %>
+    <p><em>This result was retrieved from the cache.</em></p>
+  <% end %>
+
+  <!-- Additional code for extended forecast, if available... -->
+
+<% else %>
+  <p>Please enter an address or ZIP code to retrieve the weather forecast.</p>
+<% end %>

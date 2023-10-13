@@ -1,0 +1,63 @@
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #f0f8ff, #e1f5fe);
+  margin: 0;
+  padding: 0;
+  line-height: 1.5; /* added for better readability */
+}
+
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  background-color: #fff;
+  padding: 30px; /* increased padding */
+  border-radius: 8px;
+  display: block;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  color: #333366;
+  margin-bottom: 20px; /* added space below headers */
+}
+
+label {
+  display: block;
+  margin-bottom: 10px; /* increased space */
+  font-size: 18px; /* increased font size for better readability */
+}
+
+input[type="text"] {
+  width: calc(100% - 24px); /* adjusted for increased padding */
+  padding: 12px; /* increased padding */
+  margin-bottom: 25px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px; /* increased font size */
+  transition: border-color 0.3s; /* transition effect */
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #4CAF50; /* changes border color on focus */
+}
+
+input[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 24px; /* increased padding */
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s; /* transition effect */
+}
+
+input[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+p em {
+  color: #888;
+  font-style: italic; /* making sure em is always italic */
+}
