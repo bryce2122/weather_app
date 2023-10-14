@@ -2,12 +2,22 @@
   <h1>Weather Forecast</h1>
 
   <%= form_with(url: forecast_path, method: "get", local: true, data: { turbo_frame: "weather_results" }) do %>
-    <%= label_tag :address, "Enter Address or ZIP code:" %>
-    <%= text_field_tag :address, params[:address] %>
+    <div data-controller="search">
+      <%= label_tag :zipcode, "Enter ZIP code:" %>
+      <%= text_field_tag :zipcode, params[:zipcode], data: { target: "search.input", action: "input->search#search" } %>
+
+      <!-- Hidden field to store the selected result's value -->
+      <%= hidden_field_tag :selected_coordinates, nil, data: { target: "search.selectedValue" } %>
+
+      <!-- Dynamic Results List -->
+      <ul data-target="search.results" class="results-list"></ul>
+
+      <span data-target="search.error" class="error"></span>
+    </div>
     <%= submit_tag "Get Forecast" %>
   <% end %>
 
   <%= turbo_frame_tag "weather_results" do %>
-    <%= render partial: "weather_results", locals: { forecast: @forecast, address: @address, from_cache: @from_cache } %>
+    <%= render partial: "weather_results", locals: { forecast: @forecast, zipcode: @zipcode } %>
   <% end %>
 </div>

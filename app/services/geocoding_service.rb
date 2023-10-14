@@ -1,16 +1,23 @@
-# app/services/geocoding_service.rb
-
 class GeocodingService
-  def self.fetch_coordinates(address)
-    results = Geocoder.search(address)
+  def self.fetch_coordinates(zipcode)
+    results = Geocoder.search(zipcode)
 
     if results.present?
-      {
-        latitude: results.first.latitude,
-        longitude: results.first.longitude
-      }
+      results.map do |result|
+        {
+          latitude: result.latitude,
+          longitude: result.longitude,
+          display_name: result.display_name
+        }.to_json
+      end
     else
-      nil
+      []
     end
+  end
+
+  private
+
+  def self.valid_zip_code?(input)
+    !!input.to_s.match(/\A\d{5}\z/)
   end
 end

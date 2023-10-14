@@ -1,32 +1,34 @@
 class ForecastsController < ApplicationController
   def show
-    @address = forecast_params[:address]
+    coordinates = JSON.parse(params[:selected_coordinates])
+    @forecast = fetch_weather_forecast(coordinates)
+  rescue => error
+    Rails.logger.error("Error in ForecastsController#show: #{error.message}")
+    flash[:error] = "Sorry, something has gone wrong. Please try again"
+  end
 
-    if @address.present?
-      process_forecast
+  def search
+    @zipcode = params[:query]
+    coordinates = fetch_coordinates
+
+    if coordinates
+      render json: { coordinates: coordinates, error: nil }
+    else
+      render json: { coordinates: nil, error: "Invalid ZIP code. Please try again." }, status: :bad_request
     end
   end
 
   private
 
-  def process_forecast
-    coordinates = fetch_coordinates
-    if coordinates
-      @forecast = fetch_weather_data(coordinates)
-    else
-      flash[:error] = "Invalid ZIP code or address. Please try again."
-    end
+  def fetch_weather_forecast(coordinates)
+     WeatherService.fetch_forecast(coordinates["latitude"], coordinates["longitude"])
   end
 
   def fetch_coordinates
-    GeocodingService.fetch_coordinates(@address)
-  end
-
-  def fetch_weather_data(coordinates)
-    WeatherService.fetch_forecast(coordinates[:latitude], coordinates[:longitude])
+    GeocodingService.fetch_coordinates(@zipcode)
   end
 
   def forecast_params
-    params.permit(:address)
+    params.permit(:zipcode, :query, :selected_coordinates)
   end
 end
