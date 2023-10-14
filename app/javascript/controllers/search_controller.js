@@ -29,7 +29,6 @@ export default class extends Controller {
     dropdownWrapper.className = "dropdown-list";
 
     data.coordinates.forEach(item => {
-      console.log("i", item)
       const listItem = document.createElement("li");
 
       listItem.textContent = JSON.parse(item).display_name;
