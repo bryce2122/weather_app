@@ -1,55 +1,81 @@
 RSpec.describe "Forecasts", type: :request do
+
   describe 'GET #show' do
-    let(:zipcode) { '37375' }
-
-    context 'with a valid zipcode' do
-      before do
-        # Stubbing to return valid coordinates
-        allow(GeocodingService).to receive(:fetch_coordinates).with(zipcode).and_return({
-          latitude: 40.7143528,
-          longitude: -74.0059731
-        })
-
-        # Stubbing to return some mocked forecast data
-        allow(WeatherService).to receive(:fetch_forecast).with(40.7143528, -74.0059731).and_return({
-          current_temperature: 72,
-          high_temperature: 80,
-          low_temperature: 65
-        })
-
-        get forecast_path, params: { zipcode: zipcode }
-      end
-
-      it 'returns a successful response' do
-        expect(response).to be_successful
-      end
-
-      it 'renders the correct view' do
-        expect(response).to render_template(:show)
-      end
-
-      it 'returns correct forecast data in the HTML response body' do
-        expect(response.body).to include("37375")
-        expect(response.body).to include("<strong>Current Temperature:</strong> 72°F")
-        expect(response.body).to include("<strong>High:</strong> 80°F")
-        expect(response.body).to include("<strong>Low:</strong> 65°F")
-      end
+    it 'returns a successful response' do
+      get forecast_path
+      expect(response).to be_successful
     end
+  end
 
-    context 'with an invalid zipcode' do
+  describe 'GET #search' do
+    let(:query) { '10001' }
+
+    context 'with a valid query' do
+      let(:coordinates) { [{ "display_name" => "New York, NY", "latitude" => 40.7128, "longitude" => -74.0060 }] }
+
       before do
-        # Stubbing to return nil coordinates for invalid address
-        allow(GeocodingService).to receive(:fetch_coordinates).with(zipcode).and_return(nil)
-
-        get forecast_path, params: { zipcode: zipcode }
+        allow(GeocodingService).to receive(:fetch_coordinates).with(query).and_return(coordinates)
+        get search_path, params: { query: query }, xhr: true
       end
 
       it 'returns a successful response' do
         expect(response).to have_http_status(:ok)
       end
 
-      it 'sets an error flash message' do
-        expect(flash[:error]).to eq("Invalid ZIP code. Please try again.")
+      it 'returns coordinates in JSON format' do
+        expect(response.content_type).to eq('application/json; charset=utf-8')
+        expect(JSON.parse(response.body)).to eq({ "coordinates" => coordinates, "error" => nil })
+      end
+    end
+
+    context 'with an invalid query' do
+      before do
+        allow(GeocodingService).to receive(:fetch_coordinates).with(query).and_return(nil)
+        get search_path, params: { query: query }, xhr: true
+      end
+
+      it 'returns a bad request status' do
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'returns an error message in JSON format' do
+        expect(response.content_type).to eq('application/json; charset=utf-8')
+        expect(JSON.parse(response.body)).to eq({ "coordinates" => nil, "error" => "Invalid ZIP code. Please try again." })
+      end
+    end
+  end
+
+  describe 'GET #fetch_forecast' do
+    let(:selected_coordinates) { { display_name: "New York, NY", latitude: 40.7128, longitude: -74.0060 }.to_json }
+    let(:forecast_data) { { current_temperature: 72, high_temperature: 75, low_temperature: 69 } }
+
+    context 'with valid coordinates' do
+      before do
+        allow(WeatherService).to receive(:fetch_forecast).and_return(forecast_data)
+        get fetch_forecast_path, params: { selected_coordinates: selected_coordinates }
+      end
+
+      it 'returns a successful response' do
+        expect(response).to be_successful
+      end
+
+      it 'sets the address instance variable' do
+        expect(assigns(:location_name)).to eq("New York, NY")
+      end
+
+      it 'sets the forecast instance variable' do
+        expect(assigns(:forecast)).to eq(forecast_data)
+      end
+    end
+
+    context 'when an exception is raised' do
+      before do
+        allow(WeatherService).to receive(:fetch_forecast).and_raise(StandardError.new("Some error"))
+        get fetch_forecast_path, params: { selected_coordinates: selected_coordinates }
+      end
+
+      it 'sets a flash error message' do
+        expect(flash[:error]).to eq("Sorry, something has gone wrong. Please try again")
       end
     end
   end

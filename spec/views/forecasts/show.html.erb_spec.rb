@@ -2,7 +2,7 @@ RSpec.describe "forecasts/show", type: :view do
   context 'rendering the weather forecast form' do
     before do
       assign(:forecast, nil)
-      assign(:zipcode, nil)
+      assign(:location_name, nil)
       render
     end
 
@@ -11,8 +11,8 @@ RSpec.describe "forecasts/show", type: :view do
     end
 
     it 'renders the weather forecast form' do
-      expect(rendered).to have_selector("form[action='#{forecast_path}'][method='get']")
-      expect(rendered).to have_selector('form label', text: 'Enter ZIP code:')
+      expect(rendered).to have_selector("form[action='#{fetch_forecast_path}'][method='get']")
+      expect(rendered).to have_selector('form label', text: 'Enter ZIP code or City:')
       expect(rendered).to have_selector('form input[type="text"][name="zipcode"]')
       expect(rendered).to have_selector('form input[type="submit"][value="Get Forecast"]')
     end
@@ -33,12 +33,12 @@ RSpec.describe "forecasts/show", type: :view do
 
     before do
       assign(:forecast, forecast)
-      assign(:zipcode, '37375')
+      assign(:location_name, 'New York')
       render
     end
 
     it 'renders the weather results partial within the turbo frame' do
-      expect(rendered).to have_selector('turbo-frame#weather_results h2', text: 'Weather Forecast for 37375')
+      expect(rendered).to have_selector('turbo-frame#weather_results h2', text: 'Weather Forecast for New York')
     end
   end
 end

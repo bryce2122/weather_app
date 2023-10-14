@@ -7,17 +7,20 @@ RSpec.describe GeocodingService do
         # Stub geocoder request to return a valid set of coordinates.
         Geocoder::Lookup::Test.add_stub(
           address,
-          [{ 'coordinates' => [40.7143528, -74.0059731] }]
+          [{ 'coordinates' => [40.7143528, -74.0059731], display_name: "Anytown" }]
         )
       end
 
       it 'returns the coordinates for the address' do
         result = described_class.fetch_coordinates(address)
 
-        expect(result).to eq({
-          latitude: 40.7143528,
-          longitude: -74.0059731
-        })
+        expect(result).to eq([
+          {
+            latitude: 40.7143528,
+            longitude: -74.0059731,
+            display_name: "Anytown"
+          }.to_json
+        ])
       end
     end
 
@@ -30,7 +33,7 @@ RSpec.describe GeocodingService do
       it 'returns nil' do
         result = described_class.fetch_coordinates(address)
 
-        expect(result).to be_nil
+        expect(result).to eq([])
       end
     end
   end

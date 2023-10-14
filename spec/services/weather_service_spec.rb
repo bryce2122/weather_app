@@ -12,9 +12,9 @@ RSpec.describe WeatherService, type: :service do
     let(:sample_response) do
       {
         'main' => {
-          'temp' => 273.15, # 32 F
-          'temp_max' => 275.15, # 35.6 F
-          'temp_min' => 271.15 # 28.4 F
+          'temp' => 273.15, 
+          'temp_max' => 275.15,
+          'temp_min' => 271.15
         }
       }
     end
