@@ -1,14 +1,15 @@
-<% if forecast.present? %>
-  <h2>Weather Forecast for <%= zipcode %></h2>
+<%= turbo_frame_tag "weather_results" do %>
+  <% if forecast.present? %>
+    <h2>Weather Forecast for <%= location_name %></h2>
+    <p><strong>Current Temperature:</strong> <%= forecast[:current_temperature] %>°F</p>
 
-  <p><strong>Current Temperature:</strong> <%= forecast[:current_temperature] %>°F</p>
-
-  <% if forecast[:high_temperature] && forecast[:low_temperature] %>
-    <p><strong>High:</strong> <%= forecast[:high_temperature] %>°F</p>
-    <p><strong>Low:</strong> <%= forecast[:low_temperature] %>°F</p>
+    <% if forecast[:high_temperature] && forecast[:low_temperature] %>
+      <p><strong>High:</strong> <%= forecast[:high_temperature] %>°F</p>
+      <p><strong>Low:</strong> <%= forecast[:low_temperature] %>°F</p>
   <% end %>
 <% end %>
 
-<% if flash[:error].present? %>
-  <p><%= flash[:error] %></p>
+  <% if flash[:error].present? %>
+    <p><%= flash[:error] %></p>
+    <% end %>
 <% end %>

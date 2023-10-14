@@ -13,7 +13,6 @@ export default class extends Controller {
       fetch(`/forecasts/search?query=${input}`)
         .then(response => response.json())
         .then(data => {
-          console.log("DATA", data)
           this.updateResults(data);
         })
         .catch(error => {
@@ -30,7 +29,9 @@ export default class extends Controller {
     dropdownWrapper.className = "dropdown-list";
 
     data.coordinates.forEach(item => {
+      console.log("i", item)
       const listItem = document.createElement("li");
+
       listItem.textContent = JSON.parse(item).display_name;
       listItem.addEventListener("click", () => {
         this.selectResult(item);

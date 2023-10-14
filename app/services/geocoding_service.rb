@@ -1,6 +1,6 @@
 class GeocodingService
-  def self.fetch_coordinates(zipcode)
-    results = Geocoder.search(zipcode)
+  def self.fetch_coordinates(address)
+    results = Geocoder.search(address)
 
     if results.present?
       results.map do |result|
@@ -13,11 +13,5 @@ class GeocodingService
     else
       []
     end
-  end
-
-  private
-
-  def self.valid_zip_code?(input)
-    !!input.to_s.match(/\A\d{5}\z/)
   end
 end

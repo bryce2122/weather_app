@@ -9,6 +9,7 @@ body {
 .container {
   max-width: 600px;
   margin: 50px auto;
+  position: relative;
   background-color: #fff;
   padding: 30px; /* increased padding */
   border-radius: 8px;

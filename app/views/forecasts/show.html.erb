@@ -1,9 +1,9 @@
 <div class="container">
   <h1>Weather Forecast</h1>
 
-  <%= form_with(url: forecast_path, method: "get", local: true, data: { turbo_frame: "weather_results" }) do %>
+  <%= form_with(url: fetch_forecast_path, method: "get", local: true, data: { turbo_frame: "weather_results" }) do %>
     <div data-controller="search">
-      <%= label_tag :zipcode, "Enter ZIP code:" %>
+      <%= label_tag :zipcode, "Enter ZIP code or City:" %>
       <%= text_field_tag :zipcode, params[:zipcode], data: { target: "search.input", action: "input->search#search" } %>
 
       <!-- Hidden field to store the selected result's value -->
@@ -18,6 +18,6 @@
   <% end %>
 
   <%= turbo_frame_tag "weather_results" do %>
-    <%= render partial: "weather_results", locals: { forecast: @forecast, zipcode: @zipcode } %>
+    <%= render partial: "weather_results", locals: { forecast: @forecast, location_name: @location_name } %>
   <% end %>
 </div>
