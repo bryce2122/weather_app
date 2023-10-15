@@ -14,7 +14,7 @@ class ForecastsController < ApplicationController
     if coordinates
       render json: { coordinates: coordinates, error: nil }
     else
-      render json: { coordinates: nil, error: "Invalid ZIP code. Please try again." }, status: :bad_request
+      render json: { coordinates: nil, error: "Invalid ZIP code or City. Please try again." }, status: :bad_request
     end
   end
 
