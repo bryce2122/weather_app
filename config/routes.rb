@@ -4,6 +4,12 @@ Rails.application.routes.draw do
 
   get 'forecast', to: 'forecasts#show', as: 'forecast'
 
+  scope 'forecasts' do
+    get 'search', to: 'forecasts#search', defaults: { format: :json }
+    get 'fetch_forecast', to: 'forecasts#fetch_forecast'
+  end
+
+
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check

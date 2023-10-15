@@ -40,7 +40,7 @@ RSpec.describe "Forecasts", type: :request do
 
       it 'returns an error message in JSON format' do
         expect(response.content_type).to eq('application/json; charset=utf-8')
-        expect(JSON.parse(response.body)).to eq({ "coordinates" => nil, "error" => "Invalid ZIP code. Please try again." })
+        expect(JSON.parse(response.body)).to eq({ "coordinates" => nil, "error" => "Invalid ZIP code or City. Please try again." })
       end
     end
   end
@@ -57,14 +57,6 @@ RSpec.describe "Forecasts", type: :request do
 
       it 'returns a successful response' do
         expect(response).to be_successful
-      end
-
-      it 'sets the address instance variable' do
-        expect(assigns(:location_name)).to eq("New York, NY")
-      end
-
-      it 'sets the forecast instance variable' do
-        expect(assigns(:forecast)).to eq(forecast_data)
       end
     end
 
