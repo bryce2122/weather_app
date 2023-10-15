@@ -2,7 +2,7 @@ class ForecastsController < ApplicationController
   def fetch_forecast
     coordinates = JSON.parse(params[:selected_coordinates])
     @location_name = coordinates["display_name"]
-    @forecast = WeatherService.fetch_forecast(coordinates["latitude"], coordinates["longitude"])
+    @forecast = fetch_weather_forecast(coordinates)
   rescue => error
     Rails.logger.error("Error in ForecastsController#fetch_forecast: #{error.message}")
     flash[:error] = "Sorry, something has gone wrong. Please try again"
@@ -20,6 +20,10 @@ class ForecastsController < ApplicationController
 
   private
 
+  def fetch_weather_forecast(coordinates)
+    WeatherService.fetch_forecast(coordinates["latitude"], coordinates["longitude"])
+  end
+  
   def forecast_params
     params.permit(:query, :selected_coordinates)
   end
